@@ -22,6 +22,29 @@ void AddTwoParticle1(double *particleset)
 	particleset[FourToOneInt(1, 0, 1, 1)] = +0.4;
 }
 
+void AddRandomness(double *particleset, double PosRand, double VelRand)
+{
+	for (int p = 0; p < NoProperties; p++)
+	{
+		for (int d = 0; d < NoDimensions; d++)
+		{
+			for (int i = 0; i < NoParticles; i++)
+			{
+				particleset[FourToOneInt(0, 0, d, i)] += x * PosRand;
+				x = (2 * (x)*(x)) - 1;
+			}
+		}
+		for (int d = 0; d < NoDimensions; d++)
+		{
+			for (int i = 0; i < NoParticles; i++)
+			{
+				particleset[FourToOneInt(1, 0, d, i)] += x * VelRand;
+				x = (2 * (x)*(x)) - 1;
+			}
+		}
+	}
+}
+
 int FourToOneInt(int Prop, int Frames, int Dim, int Part)
 {
 	int ret = 0;
@@ -50,32 +73,12 @@ int main()
 	}
 
 	AddTwoParticle1(particles);
-
-	for (int p = 0; p < NoProperties; p++)
-	{
-		for (int d = 0; d < NoDimensions; d++)
-		{
-			for (int i = 0; i < NoParticles; i++)
-			{
-				particles[FourToOneInt(0, 0, d, i)] += x * 1;
-				x = (2 * (x)*(x)) - 1;
-			}
-		}
-		for (int d = 0; d < NoDimensions; d++)
-		{
-			for (int i = 0; i < NoParticles; i++)
-			{
-				particles[FourToOneInt(1, 0, d, i)] += x * 0.004;
-				x = (2 * (x)*(x)) - 1;
-			}
-		}
-	}
+	AddRandomness(particles, 1, 0.04);
 
 	for (int t = 0; t < NoFrames - 1; t++)
 	{
 		for (int i = 0; i < NoParticles; i++)
 		{
-
 			for (int j = 0; j < NoParticles; j++)
 			{
 				if (i != j)
@@ -113,6 +116,7 @@ int main()
 			printf("\n");
 		}
 	}
+
 	FILE *fp;
 	fp = fopen("C:\\Users\\Admin\\Documents\\test11.txt", "w");
 	fprintf(fp, "%i", NoProperties);
