@@ -45,6 +45,40 @@ void AddRandomness(double *particleset, double PosRand, double VelRand)
 	}
 }
 
+void WriteToFile(double *particleset, char FileLocation)
+{
+	FILE *fp;
+	fp = fopen(FileLocation, "w");
+	fprintf(fp, "%i", NoProperties);
+	fprintf(fp, ",");
+	fprintf(fp, "%i", NoFrames);
+	fprintf(fp, ",");
+	fprintf(fp, "%i", NoDimensions);
+	fprintf(fp, ",");
+	fprintf(fp, "%i", NoParticles);
+	fprintf(fp, "\n");
+
+	double MaxRange = 0;
+
+	for (int b = 0; b < NoFrames; b++)
+	{
+
+		for (int a = 0; a < NoProperties; a++)
+		{
+			for (int d = 0; d < NoParticles; d++)
+			{
+				for (int c = 0; c < NoDimensions; c++)
+				{
+					fprintf(fp, "%g", particleset[FourToOneInt(a, b, c, d)]);
+					fprintf(fp, ",");
+				}
+			}
+		}
+		fprintf(fp, "\n");
+	}
+	fclose(fp);
+}
+
 int FourToOneInt(int Prop, int Frames, int Dim, int Part)
 {
 	int ret = 0;
@@ -117,35 +151,5 @@ int main()
 		}
 	}
 
-	FILE *fp;
-	fp = fopen("C:\\Users\\Admin\\Documents\\test11.txt", "w");
-	fprintf(fp, "%i", NoProperties);
-	fprintf(fp, ",");
-	fprintf(fp, "%i", NoFrames);
-	fprintf(fp, ",");
-	fprintf(fp, "%i", NoDimensions);
-	fprintf(fp, ",");
-	fprintf(fp, "%i", NoParticles);
-	fprintf(fp, "\n");
-
-	double MaxRange = 0;
-
-	for (int b = 0; b < NoFrames; b++)
-	{
-
-		for (int a = 0; a < NoProperties; a++)
-		{
-			for (int d = 0; d < NoParticles; d++)
-			{
-				for (int c = 0; c < NoDimensions; c++)
-				{
-					fprintf(fp, "%g", particles[FourToOneInt(a, b, c, d)]);
-					fprintf(fp, ",");
-				}
-			}
-		}
-		fprintf(fp, "\n");
-	}
-	fclose(fp);
-
+	WriteToFile(particles,"C:\\Users\\Admin\\Documents\\text18.txt");
 }
