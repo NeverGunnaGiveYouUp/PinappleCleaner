@@ -2,17 +2,39 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
+
 #define NoProperties	3
 #define NoDimensions	4
 #define NoParticles	2
 #define NoFrames	150000
+
 #define StrengthOGravity 100
+#define Step	0.03
+#define Startx	0.510295;
+
+double x = Startx;
+
+void AddTwoParticle1(double *particleset)
+{
+	particleset[FourToOneInt(0, 0, 0, 0)] = 100;
+	particleset[FourToOneInt(0, 0, 0, 1)] = -100;
+	particleset[FourToOneInt(1, 0, 1, 0)] = -0.4;
+	particleset[FourToOneInt(1, 0, 1, 1)] = +0.4;
+}
+
+int FourToOneInt(int Prop, int Frames, int Dim, int Part)
+{
+	int ret = 0;
+	ret += (Part);
+	ret += (Dim*NoParticles);
+	ret += (Frames*NoDimensions*NoParticles);
+	ret += (Prop*NoFrames*NoDimensions*NoParticles);
+	return ret;
+}
+
 int main()
 {
 	double *particles = malloc(sizeof(double)*NoProperties*NoFrames*NoDimensions*NoParticles);
-	double x = 0.5015252295235589;
-	double Step = 0.03;
-
 	for (int b = 0; b < NoFrames; b++)
 	{
 		for (int d = 0; d < NoParticles; d++)
@@ -27,10 +49,7 @@ int main()
 		}
 	}
 
-	particles[FourToOneInt(0, 0, 0, 0)] = 100;
-	particles[FourToOneInt(0, 0, 0, 1)] = -100;
-	particles[FourToOneInt(1, 0, 1, 0)] = -0.4;
-	particles[FourToOneInt(1, 0, 1, 1)] = +0.4;
+	AddTwoParticle1(particles);
 
 	for (int p = 0; p < NoProperties; p++)
 	{
@@ -52,7 +71,6 @@ int main()
 		}
 	}
 
-	double MinDist = 9000;
 	for (int t = 0; t < NoFrames - 1; t++)
 	{
 		for (int i = 0; i < NoParticles; i++)
@@ -77,19 +95,12 @@ int main()
 						particles[FourToOneInt(1, t + 1, d, i)] = (particles[FourToOneInt(1, t, d, i)]);// -(Step * ((particles[FourToOneInt(1, t, d, i)]))) / 5000;
 						particles[FourToOneInt(1, t + 1, d, i)] = (particles[FourToOneInt(1, t, d, i)]) + (mag[d] * Step);
 					}
-					if (distsquared < MinDist*MinDist)
-					{
-						MinDist = sqrt(distsquared);
-						//printf("%G.4", MinDist);
-						//printf("\n");
-					}
 				}
 
 			}
 			for (int d = 0; d < NoDimensions; d++)
 			{
 				particles[FourToOneInt(0, t + 1, d, i)] = particles[FourToOneInt(0, t, d, i)] + particles[FourToOneInt(1, t + 1, d, i)] * Step;
-				//printf("  ");
 				if ((t % 300) == 0)
 				{
 					printf("%g", particles[FourToOneInt(0, t, d, i)]);
@@ -102,11 +113,8 @@ int main()
 			printf("\n");
 		}
 	}
-	printf("%G", MinDist);
 	FILE *fp;
 	fp = fopen("C:\\Users\\Admin\\Documents\\test11.txt", "w");
-	//fprintf(fp, "Testing...\n");
-	//fprintf(fp, ",");
 	fprintf(fp, "%i", NoProperties);
 	fprintf(fp, ",");
 	fprintf(fp, "%i", NoFrames);
@@ -136,14 +144,4 @@ int main()
 	}
 	fclose(fp);
 
-}
-
-int FourToOneInt(int Prop, int Frames, int Dim, int Part)
-{
-	int ret = 0;
-	ret += (Part);
-	ret += (Dim*NoParticles);
-	ret += (Frames*NoDimensions*NoParticles);
-	ret += (Prop*NoFrames*NoDimensions*NoParticles);
-	return ret;
 }
