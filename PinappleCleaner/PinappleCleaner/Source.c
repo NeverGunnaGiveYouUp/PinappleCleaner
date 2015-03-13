@@ -3,10 +3,10 @@
 #include<stdlib.h>
 #include<math.h>
 
-#define NoProperties	3
-#define NoDimensions	4
-#define NoParticles	2
-#define NoFrames	150000
+#define NoProperties	2
+#define NoDimensions	5
+#define NoParticles	10
+#define NoFrames	200000
 
 #define StrengthOGravity 100
 #define Step	0.03
@@ -16,8 +16,8 @@ double x = Startx;
 
 void AddTwoParticle1(double *particleset)
 {
-	particleset[FourToOneInt(0, 0, 0, 0)] = 100;
-	particleset[FourToOneInt(0, 0, 0, 1)] = -100;
+	particleset[FourToOneInt(0, 0, 0, 0)] = 10000;
+	particleset[FourToOneInt(0, 0, 0, 1)] = 99800;
 	particleset[FourToOneInt(1, 0, 1, 0)] = -0.4;
 	particleset[FourToOneInt(1, 0, 1, 1)] = +0.4;
 }
@@ -45,7 +45,7 @@ void AddRandomness(double *particleset, double PosRand, double VelRand)
 	}
 }
 
-void WriteToFile(double *particleset, char FileLocation)
+void WriteToFile(double *particleset, char FileLocation[])
 {
 	FILE *fp;
 	fp = fopen(FileLocation, "w");
